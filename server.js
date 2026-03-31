@@ -7,14 +7,10 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
-// ✅ CORS FIX (IMPORTANT)
+// ✅ SIMPLE & STABLE CORS
 app.use(cors({
-  origin: '*',
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
-  allowedHeaders: ['Content-Type','Authorization']
+  origin: '*'
 }));
-
-app.options('*', cors()); // 🔥 THIS LINE FIXES YOUR ERROR
 
 app.use(express.json());
 
@@ -55,4 +51,5 @@ app.get('/verify', (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log("Server running on port " + PORT));
