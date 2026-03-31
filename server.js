@@ -7,34 +7,21 @@ const bcrypt = require('bcrypt');
 
 const app = express();
 
-/* ================= CORS FIX (BULLETPROOF) ================= */
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
+/* ================= CORS (FINAL CORRECT WAY) ================= */
+app.use(cors({
+  origin: 'https://vishwasfin.netlify.app', // 🔥 your frontend
+  methods: ['GET','POST','PUT','DELETE'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
 
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-app.use(cors());
 app.use(express.json());
 
-/* ================= ENV VARIABLES ================= */
+/* ================= ENV ================= */
 const ADMIN_USER = process.env.ADMIN_USER;
 const HASHED_PASS = process.env.ADMIN_PASS;
 const SECRET = process.env.JWT_SECRET;
 
-/* ================= HEALTH CHECK ================= */
+/* ================= HEALTH ================= */
 app.get('/', (req, res) => {
   res.send("API Running ✅");
 });
@@ -59,7 +46,8 @@ app.post('/login', async (req, res) => {
     res.json({ success: true, token });
 
   } catch (err) {
-    res.status(500).json({ success: false, error: "Server error" });
+    console.error(err);
+    res.status(500).json({ success: false });
   }
 });
 
@@ -76,12 +64,12 @@ app.get('/verify', (req, res) => {
 
     res.json({ success: true, user: decoded.user });
 
-  } catch (err) {
+  } catch {
     res.status(401).json({ success: false });
   }
 });
 
-/* ================= START SERVER ================= */
+/* ================= START ================= */
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log("Server running on port " + PORT);
