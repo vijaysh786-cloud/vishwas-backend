@@ -8,9 +8,7 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-  origin: '*'
-}));
+app.use(cors());
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const HASHED_PASS = process.env.ADMIN_PASS;
