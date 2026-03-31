@@ -1,8 +1,5 @@
 require('dotenv').config();
 
-console.log("Starting server...");
-console.log("ENV:", process.env.ADMIN_USER);
-
 const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
@@ -11,12 +8,15 @@ const bcrypt = require('bcrypt');
 const app = express();
 app.use(express.json());
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://vishwasfin.netlify.app']
+}));
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const HASHED_PASS = process.env.ADMIN_PASS;
 const SECRET = process.env.JWT_SECRET;
 
+// LOGIN
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -35,6 +35,7 @@ app.post('/login', async (req, res) => {
   res.json({ success: true, token });
 });
 
+// VERIFY
 app.get('/verify', (req, res) => {
   const token = req.headers.authorization;
 
