@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: ['https://vishwasfin.netlify.app']
+  origin: '*'
 }));
 
 const ADMIN_USER = process.env.ADMIN_USER;
