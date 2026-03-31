@@ -6,9 +6,17 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const app = express();
-app.use(express.json());
 
-app.use(cors());
+// ✅ CORS FIX (IMPORTANT)
+app.use(cors({
+  origin: '*',
+  methods: ['GET','POST','PUT','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization']
+}));
+
+app.options('*', cors()); // 🔥 THIS LINE FIXES YOUR ERROR
+
+app.use(express.json());
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const HASHED_PASS = process.env.ADMIN_PASS;
